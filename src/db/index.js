@@ -8,7 +8,7 @@ class FlightsDB {
   }
 
   #isError() {
-    return ((Math.random() * 100) | 0) > 40;
+    return ((Math.random() * 100) | 0) > 60;
   }
 
   getAllFlights() {
@@ -31,7 +31,8 @@ class FlightsDB {
     });
   }
 
-  deleteFlight(index) {
+  deleteFlight(id) {
+    const index = this.#flights.findIndex((d) => d.id == id);
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         const isError = this.#isError();

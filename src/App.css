@@ -1,3 +1,7 @@
 body {
-  margin: 5rem;
+  text-align: center;
+}
+.my-container {
+  max-width: 90vw;
+  margin: auto;
 }
