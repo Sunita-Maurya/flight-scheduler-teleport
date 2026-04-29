@@ -219,6 +219,7 @@ const App = () => {
 
   const clearFilter = () => {
     setFilter({});
+    setSearchValue("");
     //  startDate: null, // yyyy-mm-dd
     // endDate: null, // yyyy-mm-dd
     // daysOfOperation: null, //"1234567"
