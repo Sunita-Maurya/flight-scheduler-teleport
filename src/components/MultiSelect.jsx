@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 
-const options = [
+export const WEEK_DAYS = [
   "Monday",
   "Tuesday",
   "Wednesday",
@@ -9,6 +9,15 @@ const options = [
   "Saturday",
   "Sunday",
 ];
+export const SHORT_WEEK_DAYS = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+];
 
 export default function MultiSelect({ selected, name, onChange }) {
   // const [selected, setSelected] = useState([]);
@@ -16,7 +25,7 @@ export default function MultiSelect({ selected, name, onChange }) {
   const ref = useRef();
 
   const selectedDaysLabel = selected
-    .map((dayNum) => options[dayNum - 1])
+    .map((dayNum) => WEEK_DAYS[dayNum - 1])
     .join(",");
 
   // close on outside click
@@ -52,7 +61,7 @@ export default function MultiSelect({ selected, name, onChange }) {
       {/*  Dropdown */}
       {open && (
         <div className="absolute w-full bg-white border rounded-lg mt-1 shadow max-h-60 overflow-y-auto z-10">
-          {options.map((option, i) => (
+          {WEEK_DAYS.map((option, i) => (
             <label
               key={option}
               className="flex items-center gap-2 p-2 cursor-pointer hover:bg-gray-100"

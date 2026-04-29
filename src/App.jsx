@@ -6,7 +6,7 @@ import { Pencil, Check, Trash, X } from "lucide-react";
 import { flightDB } from "./db";
 import { Skeleton } from "./components/Skeleton";
 import toast, { Toaster } from "react-hot-toast";
-import MultiSelect from "./components/MultiSelect";
+import MultiSelect, { SHORT_WEEK_DAYS } from "./components/MultiSelect";
 import DropDown from "./components/DropDown";
 
 const App = () => {
@@ -188,10 +188,8 @@ const App = () => {
     setFilter((prev) => ({ ...prev, [name]: value }));
   };
   const applyFilter = () => {
-    cancelEditHandler();
-    console.log("apply filter");
+    // cancelEditHandler();
 
-    console.log(filter, data);
     const newFilteredData = data.filter((row) => {
       if (filter.aoc && row.aoc !== filter.aoc) return false;
       if (filter.status && row.status !== filter.status) return false;
@@ -241,7 +239,7 @@ const App = () => {
             name="aoc"
             value={filter.aoc}
             options={["Z2", "D7", "AK", "FD", "QZ"]}
-            className="rounded border outline-0 focus:outline-1 h-8"
+            className="rounded border outline-0 focus:outline-1 h-8 cursor-pointer"
             onChange={filterChanggeHandler}
           />
           <input
@@ -249,7 +247,7 @@ const App = () => {
             name="startDate"
             value={filter.startDate || ""}
             placeholder="Start date"
-            className="border rounded bg-white h-8"
+            className="border rounded bg-white h-8 cursor-pointer"
             onChange={filterChanggeHandler}
           />
           <input
@@ -258,7 +256,7 @@ const App = () => {
             value={filter.endDate || ""}
             placeholder="End date"
             onChange={filterChanggeHandler}
-            className="border rounded bg-white h-8"
+            className="border rounded bg-white h-8 cursor-pointer"
           />
           <MultiSelect
             name="daysOfOperation"
@@ -272,7 +270,7 @@ const App = () => {
             name="status"
             value={filter.status}
             options={["Active", "Inactive"]}
-            className="rounded border outline-0 focus:outline-1 h-8"
+            className="rounded border outline-0 focus:outline-1 h-8 cursor-pointer"
             onChange={filterChanggeHandler}
           />
           <DropDown
@@ -283,7 +281,7 @@ const App = () => {
               { value: "narrow_body", label: "narrow" },
               { value: "wide_body", label: "wide" },
             ]}
-            className="rounded border outline-0 focus:outline-1 h-8"
+            className="rounded border outline-0 focus:outline-1 h-8 cursor-pointer"
             onChange={filterChanggeHandler}
           />
 
@@ -294,14 +292,14 @@ const App = () => {
             Apply Filter
           </button> */}
           <button
-            className="bg-gray-500 px-1.5 rounded text-white"
+            className="bg-gray-500 px-1.5 rounded text-white cursor-pointer"
             onClick={clearFilter}
           >
             Clear Filter
           </button>
           {!!selectedId.length && (
             <button
-              className="bg-red-400 px-1.5 rounded text-white"
+              className="bg-red-400 px-1.5 rounded text-white cursor-pointer"
               onClick={multiDeleteHandler}
             >
               Delete
@@ -313,15 +311,12 @@ const App = () => {
             type="search"
             placeholder="Search flights"
             value={searchValue}
-            className="rounded border outline-0 focus:outline-1 h-8"
+            className="rounded border outline-0 focus:outline-1 h-8 px-1"
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </div>
       </div>
-      <div
-        style={{ height: "500px" }}
-        className="border rounded-lg overflow-hidden shadow "
-      >
+      <div className="border rounded-lg overflow-hidden shadow h-[80vh]">
         <TableVirtuoso
           data={filteredData}
           fixedHeaderContent={() => (
@@ -346,18 +341,18 @@ const App = () => {
               <td>
                 <input
                   type="checkbox"
-                  checked={selectedId?.includes(item?.id)}
+                  checked={selectedId?.includes(item.id)}
                   onChange={(e) => selectHandler(e, item.id)}
                 />
               </td>
-              <td>{item?.id}</td>
-              <td>{item?.aoc}</td>
-              <td>{item?.flightNumber}</td>
+              <td>{item.id}</td>
+              <td>{item.aoc}</td>
+              <td>{item.flightNumber}</td>
               <td>
-                {item?.origin} → {item?.destination}
+                {item.origin} → {item.destination}
               </td>
               <td>
-                {editRowId === item?.id ? (
+                {editRowId === item.id ? (
                   <input
                     name="std"
                     type="time"
@@ -367,11 +362,11 @@ const App = () => {
                     disabled={saveLoading}
                   />
                 ) : (
-                  item?.std
+                  item.std
                 )}
               </td>
               <td>
-                {editRowId === item?.id ? (
+                {editRowId === item.id ? (
                   <input
                     type="time"
                     name="sta"
@@ -381,13 +376,17 @@ const App = () => {
                     disabled={saveLoading}
                   />
                 ) : (
-                  item?.sta
+                  item.sta
                 )}
               </td>
-              <td>{item?.daysOfOperation}</td>
-              <td>{item?.bodyType.split("_")[0]}</td>
               <td>
-                {editRowId === item?.id ? (
+                {item.daysOfOperation
+                  .map((dayNum) => SHORT_WEEK_DAYS[dayNum - 1])
+                  .join(",")}
+              </td>
+              <td>{item.bodyType.split("_")[0]}</td>
+              <td>
+                {editRowId === item.id ? (
                   <input
                     type="date"
                     name="startDate"
@@ -398,11 +397,11 @@ const App = () => {
                     max={editedFields.endDate}
                   />
                 ) : (
-                  item?.startDate
+                  item.startDate
                 )}
               </td>
               <td>
-                {editRowId === item?.id ? (
+                {editRowId === item.id ? (
                   <input
                     type="date"
                     name="endDate"
@@ -413,33 +412,33 @@ const App = () => {
                     min={editedFields.startDate}
                   />
                 ) : (
-                  item?.endDate
+                  item.endDate
                 )}
               </td>
               <td>
                 <Switch
-                  status={item?.status === "Active"}
-                  onChange={(status) => statusChangeHandler(status, item?.id)}
+                  status={item.status === "Active"}
+                  onChange={(status) => statusChangeHandler(status, item.id)}
                 />
               </td>
               <td>
-                <div className="w-fit text-center flex justify-center p-1 my-2 border rounded">
-                  {editRowId === item?.id ? (
-                    <div className=" text-center flex justify-center items-center">
+                <div className="w-fit text-center flex justify-center items-center px-2 py-1 my-2 rounded shadow gap-3 border border-gray-300">
+                  {editRowId === item.id ? (
+                    <div className=" text-center flex justify-center items-center gap-3">
                       {saveLoading ? (
                         <div className="w-4 h-4 border-4 border-transparent border-t-blue-500 border-r-purple-500 rounded-full animate-spin"></div>
                       ) : (
                         <Check
                           type="button"
                           title="save"
-                          className="w-4 h-4 text-green-700 cursor-pointer"
+                          className="w-5 h-5 hover:text-green-700 cursor-pointer"
                           onClick={saveHandler}
                         />
                       )}
                       <X
                         type="button"
                         title="cancel"
-                        className="w-5 h-5 text-red-500"
+                        className="w-5 h-5 hover:text-red-500 cursor-pointer"
                         onClick={cancelEditHandler}
                       />
                     </div>
@@ -447,14 +446,14 @@ const App = () => {
                     <Pencil
                       type="button"
                       title="edit"
-                      className="w-4 h-4 text-blue-500 cursor-pointer"
+                      className="w-4 h-4 hover:text-blue-500 cursor-pointer"
                       onClick={() => editHandler(item)}
                     />
                   )}
                   <Trash
                     type="button"
                     title="delete"
-                    className="w-4 h-4 text-blue-500 cursor-pointer"
+                    className="w-4 h-4 cursor-pointer hover:text-red-400"
                     onClick={() => deleteHandler(item.id)}
                   />
                 </div>
@@ -473,8 +472,8 @@ const App = () => {
               return (
                 <tr
                   {...props}
-                  className={`border-b transition cursor-pointer text-center ${
-                    item?.id === editRowId ? "bg-gray-300" : "hover:bg-gray-300"
+                  className={`border-b transition text-center ${
+                    item.id === editRowId ? "bg-gray-300" : "hover:bg-gray-300"
                   }`}
                 />
               );
